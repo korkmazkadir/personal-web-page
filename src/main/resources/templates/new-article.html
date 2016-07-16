@@ -1,0 +1,123 @@
+{{> _header}}
+<div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.10.0/js/bootstrap-markdown.min.js"></script>
+    <script src="markdown.min.js"></script>
+    <script src="jquery-fieldselection.js"></script>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.10.0/css/bootstrap-markdown.min.css' rel='stylesheet' type='text/css'>
+
+    <h3>Yeni Makale<small style="margin-left: 20px">yaz-ön izle-kaydet</small></h3>
+    <br/>
+
+
+    <form  method="post" target="_blank" modelAttribute="article">
+        <input name="name" type="text" placeholder="Title?" style="min-width:100%;" />
+        <hr style="border: 0px; height: 5px;" />
+        <textarea id="markdown-editor" name="content" data-provide="markdown" rows="10" style="min-height:70vh;" ></textarea>
+        <br/>
+        <div>
+            <button type="submit" name="action" value="preview" class="btn btn-primary"  formaction="/yeni-makale-on-izleme">Ön izle</button>
+            <button type="submit" name="action" value="publish" class="btn btn-danger" formaction="/yeni-makale-yayınla">Yayınla</button>
+        </div>
+    </form>
+
+    <input type="hidden" id="image-path">
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" style="float: left">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" style="float: right" onclick="writePath();">Tamam</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+    function writePath() {
+        console.log($(".clicked-image img").attr("src"));
+        $("#image-path").val($(".clicked-image img").attr("src"));
+        $("#markdown-editor").replaceSelection($("#image-path").val());
+    }
+
+    $('#myModal').on('show.bs.modal', function (e) {
+        loadImages();
+    });
+
+    function loadImages(pageNumber) {
+
+        if (!pageNumber)
+        {
+            pageNumber = 1;
+        }
+
+        console.log("Here. page number is " + pageNumber);
+        $.ajax({
+            type: "POST",
+            url: "/loadImages",
+            cache: false,
+            data: jQuery.param({pageNumber: pageNumber}),
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function (response) {
+                $(".modal-body").html(response);
+            },
+            error: function (xhr, status) {
+                console.log('Unknown error ' + status);
+            }
+        });
+    }
+
+    $("#markdown-editor").markdown({
+        additionalButtons: [
+            [{
+                    name: "groupCustom",
+                    data: [{
+                            name: "cmdBeer",
+                            toggle: true, // this param only take effect if you load bootstrap.js
+                            title: "Image",
+                            icon: "glyphicon glyphicon-picture",
+                            callback: function (e) {
+                                // Replace selection with some drinks
+//                            var chunk, cursor,
+//                                    selected = e.getSelection(), content = e.getContent(),
+//                                    drinks = ["Heinekken", "Budweiser",
+//                                        "Iron City", "Amstel Light",
+//                                        "Red Stripe", "Smithwicks",
+//                                        "Westvleteren", "Sierra Nevada",
+//                                        "Guinness", "Corona", "Calsberg"],
+//                                    index = Math.floor((Math.random() * 10) + 1)
+//
+                                $("#myModal").modal()
+//
+//                            chunk = $("#main-username").val();
+//
+//                            // transform selection and set the cursor into chunked text
+//                            e.replaceSelection(chunk)
+//                            cursor = selected.start
+//                            // Set the cursor
+//                            e.setSelection(cursor, cursor + chunk.length)
+                            }
+                        }]
+                }]
+        ]
+    })
+
+</script>
+
+{{> _navigation}}
+{{> _footer}}

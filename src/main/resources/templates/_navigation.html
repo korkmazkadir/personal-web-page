@@ -1,0 +1,26 @@
+</div>
+
+<div class="col-sm-3">
+    <img src="/images/kadirkorkmaz.jpg" class="img-responsive center-block" style="margin-bottom: 20px;"  alt="Kadir Korkmaz" >
+
+    <ul class="list-group">
+        {{#navigationBarContentForUser}}
+        <a href="{{getLink}}" class="list-group-item">{{getName}}</a>
+        {{/navigationBarContentForUser}}    
+        <a data-toggle="collapse" data-target="#demo" href="#" class="list-group-item">Makalelerim</a>
+        <div id="demo" class="collapse">
+            <ul class="list-group">
+                {{#articles}}
+                <a href="/makale/{{id}}/{{getPathString}}" class="list-group-item">{{.}}</a>
+                {{/articles}} 
+            </ul>
+        </div>
+        {{#navigationBarContentForAdmin}}
+        <a href="{{getLink}}" class="list-group-item">{{getName}}</a>
+        {{/navigationBarContentForAdmin}}  
+        
+    </ul>
+
+</div>
+
+</div>

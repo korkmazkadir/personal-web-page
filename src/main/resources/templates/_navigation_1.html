@@ -1,0 +1,28 @@
+                </div>
+
+                <div class="col-sm-3">
+                    <img src="/images/kadirkorkmaz.jpg" class="img-responsive center-block" style="margin-bottom: 20px;"  alt="Kadir Korkmaz" >
+
+                    <ul class="list-group">
+                        <a href="/" class="list-group-item">Ana Sayfa</a>
+                        <a href="#" class="list-group-item">Özgeçmişim</a>
+                        <a href="#" class="list-group-item">Internet Sayfam</a>
+                        <a href="#" class="list-group-item">İletişim</a>
+                        <a href="/yeni-makale" class="list-group-item">Yeni Makale</a>
+                        <a href="/show-images" class="list-group-item">Resimlerim</a>
+                        <a data-toggle="collapse" data-target="#demo" href="#" class="list-group-item">Makalelerim</a>
+                        
+                        <div id="demo" class="collapse">
+                            <ul class="list-group">
+                            {{#articles}}
+                            <a href="/makale/{{id}}/{{getPathString}}" class="list-group-item">{{.}}</a>
+                            {{/articles}} 
+                            </ul>
+                        </div>
+          
+                        <a href="/makale-yonetimi" class="list-group-item">Makale Yönetimi</a>
+                        
+                    </ul>
+                </div>
+
+            </div>

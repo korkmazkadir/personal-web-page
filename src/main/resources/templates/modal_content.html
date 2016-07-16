@@ -1,0 +1,50 @@
+<div class="row-fluid">
+
+    {{#images}}
+    <div class="col-sm-3">
+        <div class="image-container"  align="center" style="margin: 5px;">
+            <img src="{{.}}" class="img-rounded" alt="Cinque Terre" style="width:auto;height:100px; max-width: 100%">
+
+            <div class="image-info">
+                <span>Kadir Korkmaz</span> <br/>
+                <span><small>Bu resim benim resmim</small></span>
+            </div>
+        </div>
+    </div>
+    {{/images}}
+
+    <div align="center">
+        <ul class="pagination">
+            {{#pageNumbers}}
+            <li id="_{{.}}"><a href="#" onclick="loadImages({{.}});" >{{.}}</a></li>
+            {{/pageNumbers}}
+        </ul>
+    </div>
+
+
+    <script>
+        $("#_{{currentPageNumber}}").addClass("active");
+        $(document).on('click', ".image-container", function () {
+                $("div").removeClass("clicked-image");
+                $(this).addClass("clicked-image");
+        });
+
+    </script>
+
+</div>
+
+<style>
+
+    .clicked-image{
+        border-color: blue !important;
+    }
+
+    .image-container{
+        border-style: solid;
+        border-width: thin;
+        border-radius: 6px;
+        border-color:white;
+        cursor: pointer;
+    }
+
+</style>

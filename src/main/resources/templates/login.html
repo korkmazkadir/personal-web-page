@@ -1,0 +1,33 @@
+{{> _header}}
+<div>
+
+    <h3>Oturum Aç<small style="margin-left: 20px">kayıtlı kullanıcı girişi</small></h3>
+    <br/>
+
+    <form class="form-horizontal" action="/login" method="POST">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label"  for="username">Kullanıcı adı</label>
+                <div class="controls">
+                    <input type="text" id="username" name="username" placeholder="" class="input-xlarge">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">Şifre</label>
+                <div class="controls">
+                    <input type="password" id="password" name="password" placeholder="" class="input-xlarge">
+                </div>
+            </div>
+            <div class="control-group">
+                <br/>
+                <div class="controls">
+                    <button class="btn btn-success">Login</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+{{> _navigation}}
+{{> _footer}}
+
+

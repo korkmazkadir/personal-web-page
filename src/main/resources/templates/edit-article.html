@@ -1,0 +1,36 @@
+{{> _header}}
+<div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.10.0/js/bootstrap-markdown.min.js"></script>
+    <script src="markdown.min.js"></script>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.10.0/css/bootstrap-markdown.min.css' rel='stylesheet' type='text/css'>
+
+    <h3>Makale Düzenle<small style="margin-left: 20px">değiştir-ön izle-kaydet</small></h3>
+    <br/>
+
+    {{#article}}
+    <form id="articleForm" method="post" target="_blank" modelAttribute="article">
+        <input name="name" type="text" placeholder="Title?" style="min-width:100%;" value="{{getName}}"  />
+        <input type="hidden" name="id" value="{{getId}}">
+        <hr style="border: 0px; height: 5px;" />
+        <textarea name="content" data-provide="markdown" rows="10" style="min-height:70vh;">{{getContent}}</textarea>
+        <br/>
+        <div>
+            <button type="submit" name="action" value="preview" class="btn btn-primary"  formaction="/yeni-makale-on-izleme">Ön izle</button>
+            <button type="submit" name="action" value="publish" onclick="changeformtarget('_self');"  class="btn btn-danger" formaction="/makale-degisiklik-kaydet">Kaydet</button>
+        </div>
+    </form>
+    {{/article}}
+    
+</div>
+
+<script type="text/javascript">
+function changeformtarget(newTarget) {
+     document.getElementById('articleForm').target = newTarget;
+     count += 1;
+}
+</script>
+
+{{> _navigation}}
+{{> _footer}}

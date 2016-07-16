@@ -1,0 +1,208 @@
+{{> _header}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
+
+<style>
+
+    ol.nested_with_switch li, ol.simple_with_animation li, ol.serialization li, ol.default li {
+        cursor: pointer; }
+
+    ol.simple_with_animation {
+        border: 1px solid #999999; }
+
+    ol.vertical {
+        margin: 0 0 9px 0;
+        min-height: 10px; 
+        padding-left : 5px;
+    }
+    /* line 13, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
+    ol.vertical li {
+        display: block;
+        margin: 5px;
+        padding: 5px;
+        border: 1px solid #cccccc;
+        color: #0088cc;
+        background: #eeeeee; }
+    /* line 20, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
+    ol.vertical li.placeholder {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        border: none; }
+    /* line 25, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
+    ol.vertical li.placeholder:before {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        margin-top: -5px;
+        left: -5px;
+        top: -4px;
+        border: 5px solid transparent;
+        border-left-color: red;
+        border-right: none; } 
+
+    .edit_icons{
+        margin-left: 10px;
+        margin-right: 10px;
+        float:right
+    }
+
+</style>
+
+<div>
+
+
+    <h3>Makale Yönetimi<small style="margin-left: 20px">görüntüle-sırala-sil-sakla-düzenle</small></h3>
+    <br/>
+
+
+    <ol id="articles" class="simple_with_animation vertical">
+        {{#articleList}}
+        <li articleId="{{id}}">
+            <a href="/makale/{{id}}/{{getPathString}}" target="_blank">{{.}}</a>
+            <a href="/makale-duzenle/{{id}}" target="_blank"><span class="glyphicon glyphicon-pencil edit_icons" aria-hidden="true"></span></a>
+            <span class="glyphicon {{#isVisible}}glyphicon-eye-open{{/isVisible}}{{^isVisible}}glyphicon-eye-close{{/isVisible}} edit_icons" aria-hidden="true"></span> 
+            <span class="glyphicon glyphicon-trash edit_icons" aria-hidden="true"></span>
+        </li>
+        {{/articleList}} 
+    </ol>
+
+    <div>  
+        <button id="save"  name="action" value="preview" class="btn btn-primary" >Kaydet</button>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+$('#save').attr('disabled', 'disabled');
+
+var adjustment;
+var positionChanged = 0;
+$("ol.simple_with_animation").sortable({
+    group: 'simple_with_animation',
+    pullPlaceholder: false,
+    // animation on drop
+    onDrop: function ($item, container, _super) {
+
+        if ($item.attr('doNotMove') == 'doNotMove')
+        {
+            return;
+        }
+
+        var $clonedItem = $('<li/>').css({height: 0});
+        $item.before($clonedItem);
+        $clonedItem.animate({'height': $item.height()});
+
+        $('#save').removeAttr('disabled');
+
+        $item.animate($clonedItem.position(), function () {
+            $clonedItem.detach();
+            _super($item, container);
+            positionChanged++;
+        });
+
+    },
+    // set $item relative to cursor position
+    onDragStart: function ($item, container, _super) {
+
+        if ($item.attr('doNotMove') == 'doNotMove')
+        {
+            return;
+        }
+
+        var offset = $item.offset(),
+                pointer = container.rootGroup.pointer;
+
+        adjustment = {
+            left: pointer.left - offset.left,
+            top: pointer.top - offset.top
+        };
+
+        _super($item, container);
+    },
+    onDrag: function ($item, position) {
+
+        if ($item.attr('doNotMove') == 'doNotMove')
+        {
+            return;
+        }
+
+        $item.css({
+            left: position.left - adjustment.left,
+            top: position.top - adjustment.top
+        });
+    }
+});
+
+$(document).on('click', "span.glyphicon-eye-open", function () {
+    $(this).removeClass("glyphicon-eye-open");
+    $(this).addClass("glyphicon-eye-close");
+    $('#save').removeAttr('disabled');
+});
+
+$(document).on('click', "span.glyphicon-eye-close", function () {
+    $(this).removeClass("glyphicon-eye-close");
+    $(this).addClass("glyphicon-eye-open");
+    $('#save').removeAttr('disabled');
+});
+
+
+$(document).on('click', '#save', function () {
+    var changeList = [];
+
+    $("#articles li").each(function () {
+        var change = {};
+        change.articleId = $(this).attr("articleId");
+        change.articleIndex = $(this).index() + 1;
+        change.isVisible = ($(this).has("span.glyphicon-eye-open").length ? true : false);
+        change.deleted = (($(this).attr('doNotMove') === 'doNotMove') ? true : false);
+        changeList.push(change);
+    });
+
+
+//    changeList.forEach(function(item){
+//       console.log("ID : " + item.articleId + " Index : " + item.articleIndex + " is visible : " + item.isVisible );
+//    });
+
+    var jsonString = JSON.stringify(changeList);
+    console.log(jsonString);
+
+    $.ajax({
+        url: "/makale-siralama-gorunurluk-degistir",
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        data: jsonString, //Stringified Json Object
+        async: false, //Cross-domain requests and dataType: "jsonp" requests do not support synchronous operation
+        cache: false, //This will force requested pages not to be cached by the browser          
+        processData: false, //To avoid making query String instead of JSON
+        success: function (resposeJsonObject) {
+            //$('#save').attr('disabled', 'disabled');
+            location.reload();
+        }
+
+    });
+
+});
+
+
+$(document).on('click', "span.glyphicon-trash", function () {
+    if ($(this).parent().attr('doNotMove') == 'doNotMove')
+    {
+        $(this).siblings().css('opacity', '1');
+        $(this).parent().attr('doNotMove', '');
+    }
+    else
+    {
+        $(this).siblings().css('opacity', '0.3');
+        $(this).parent().attr('doNotMove', 'doNotMove');
+    }
+    $('#save').removeAttr('disabled');
+});
+
+</script>
+
+{{> _navigation}}
+{{> _footer}}
+
+
