@@ -27,8 +27,7 @@ public class UsageStatisticsEntity {
     @Column(nullable = false)
     private String pageUrl;
 
-    @Column(columnDefinition = "default null")
-    private Long articleId;
+    private Long articleId = null;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date = new Date();

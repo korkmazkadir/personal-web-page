@@ -35,10 +35,9 @@ public class ArticleEntity {
     @Column(nullable = false)
     private boolean isVisible = true;
 
-    @Column(columnDefinition="default 1000")
     private int viewOrder = 1000;
     
-    @Column(columnDefinition="default false")
+    
     private boolean isDeleted = false;
 
     public ArticleEntity() {

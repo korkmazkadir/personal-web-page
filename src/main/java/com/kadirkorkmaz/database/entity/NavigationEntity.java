@@ -27,8 +27,7 @@ public class NavigationEntity {
 
     private String link;
 
-    @Column(columnDefinition="default false")
-    private boolean anonymousEnabled;
+    private boolean anonymousEnabled = false;
 
     private int viewOrder;
 
