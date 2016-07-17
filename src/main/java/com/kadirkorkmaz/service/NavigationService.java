@@ -26,4 +26,18 @@ public class NavigationService {
         return navigationRepository.findAllByAnonymousDisabled();
     }
 
+    public NavigationEntity registerNavigationEntry(NavigationEntity navEnt) {
+        return navigationRepository.save(navEnt);
+    }
+
+    public NavigationEntity findOrCreateNavigationEntry(String name, String link, boolean anonymousEnabled, int viewOrder) {
+        NavigationEntity entry = navigationRepository.findOne(name, link, anonymousEnabled);
+
+        if (entry == null) {
+            entry = navigationRepository.save(new NavigationEntity(name, link, anonymousEnabled, viewOrder));
+        }
+
+        return entry;
+    }
+
 }

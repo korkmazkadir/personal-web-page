@@ -14,5 +14,8 @@ public interface NavigationRepository extends CrudRepository<NavigationEntity, L
 
     @Query("select n from NavigationEntity n where n.anonymousEnabled = false")
     List<NavigationEntity> findAllByAnonymousDisabled();
-    
+
+    @Query("select n from NavigationEntity n where n.name = ?1 and n.link = ?2 and n.anonymousEnabled = ?3")
+    NavigationEntity findOne(String name, String link, boolean anonymousEnabled);
+
 }
