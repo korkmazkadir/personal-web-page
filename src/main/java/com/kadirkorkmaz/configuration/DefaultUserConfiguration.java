@@ -4,8 +4,6 @@ import com.kadirkorkmaz.database.entity.UserEntity;
 import com.kadirkorkmaz.database.entity.UserRole;
 import com.kadirkorkmaz.database.entity.UserRoleEnum;
 import com.kadirkorkmaz.database.repository.UserRepository;
-import java.util.HashSet;
-import java.util.Set;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
